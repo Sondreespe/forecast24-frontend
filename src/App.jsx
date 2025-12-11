@@ -15,7 +15,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <div className="logo">Forecast24 LETSGOOO</div>
+        <div className="logo">Forecast24 hei kitty</div>
         <nav className="nav">
           <a href="#about">Om</a>
           <a href="#features">Funksjoner</a>
