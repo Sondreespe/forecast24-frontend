@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchForecast } from "./api";
+import { SpotPriceChart } from "./components/SpotPriceChart";
+
 
 
 function App() {
@@ -94,6 +96,15 @@ function App() {
               </p>
             )}
 
+            <section style={{ marginTop: "1.5rem" }}>
+              <h3 style={{ margin: 0, fontSize: "0.95rem" }}>Dagens strømpris (NO1)</h3>
+                <p style={{ margin: "0.2rem 0 0.8rem", fontSize: "0.8rem", color: "#9ca3af" }}>
+                  Time-for-time spotpris for i dag. Data fra NVE / hvakosterstrommen.no.
+                </p>
+              <SpotPriceChart area="NO1" />
+            </section>
+
+
             {forecastError && (
               <p className="api-status api-status--error">
                 Klarte ikke å hente forecast-data: {forecastError}
@@ -108,7 +119,7 @@ function App() {
       <footer className="footer">
         <span>© {new Date().getFullYear()} Forecast24</span>
         <span className="footer-dot">•</span>
-        <span>Bygget som data science sideprosjekt</span>
+        <span>Built by Sondre Espe</span>
       </footer>
     </div>
   );
