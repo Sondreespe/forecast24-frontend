@@ -1,8 +1,21 @@
+import { useEffect, useState } from "react";
+import { fetchForecast } from "./api";
+
+
 function App() {
+  const [forecastInfo, setForecastInfo] = useState(null);
+  const [forecastError, setForecastError] = useState(null);
+
+  useEffect(() => {
+    fetchForecast()
+      .then((data) => setForecastInfo(data))
+      .catch((err) => setForecastError(err.message));
+  },  []);
+
   return (
     <div className="app">
       <header className="header">
-        <div className="logo">Forecast24</div>
+        <div className="logo">Forecast24 LETSGOOO</div>
         <nav className="nav">
           <a href="#about">Om</a>
           <a href="#features">Funksjoner</a>
@@ -71,6 +84,17 @@ function App() {
             <div className="info-item">
               <span className="label">Status</span>
               <span className="value status-pill">MVP under utvikling</span>
+              {forecastInfo && (
+                <p style={{ fontSize: "0.8rem", color: "#9ca3af", marginTop: "0.4rem" }}>
+                  API-status: <strong>{forecastInfo.status}</strong> – {forecastInfo.message}
+                </p>
+              )}
+              {forecastError && (
+                <p style={{ fontSize: "0.8rem", color: "#f97373", marginTop: "0.4rem" }}>
+                  Klarte ikke å hente forecast-data: {forecastError}
+              </p>
+              )}
+              
             </div>
           </div>
         </section>
