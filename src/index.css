@@ -82,7 +82,15 @@ body {
 }
 
 /* Hero */
+.api-status {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: 0.4rem;
+}
 
+.api-status--error {
+  color: #f97373;
+}
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);

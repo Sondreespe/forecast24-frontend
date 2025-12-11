@@ -84,16 +84,21 @@ function App() {
             <div className="info-item">
               <span className="label">Status</span>
               <span className="value status-pill">MVP under utvikling</span>
-              {forecastInfo && (
-                <p style={{ fontSize: "0.8rem", color: "#9ca3af", marginTop: "0.4rem" }}>
-                  API-status: <strong>{forecastInfo.status}</strong> – {forecastInfo.message}
-                </p>
-              )}
-              {forecastError && (
-                <p style={{ fontSize: "0.8rem", color: "#f97373", marginTop: "0.4rem" }}>
-                  Klarte ikke å hente forecast-data: {forecastError}
+            {forecastInfo && (
+              <p className="api-status">
+                API-status: <strong>{forecastInfo.status}</strong> – billigst rundt kl{" "}
+                <strong>{forecastInfo.summary.cheapest_hour}:00</strong>, dyrest rundt kl{" "}
+                <strong>{forecastInfo.summary.priciest_hour}:00</strong> (
+                {forecastInfo.summary.min_price}–{forecastInfo.summary.max_price}{" "}
+                {forecastInfo.summary.unit})
               </p>
-              )}
+            )}
+
+            {forecastError && (
+              <p className="api-status api-status--error">
+                Klarte ikke å hente forecast-data: {forecastError}
+              </p>
+            )}
               
             </div>
           </div>
