@@ -1,6 +1,9 @@
 import axios from "axios";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+if (!API_BASE) {
+  throw new Error("VITE_API_BASE mangler. Sett den i Render for frontend.");
+}
 
 export function fetchSpotPrices(area) {
   return axios.get(`${API_BASE}/api/spotprices`, { params: { area } });
