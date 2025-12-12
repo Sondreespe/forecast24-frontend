@@ -1,17 +1,17 @@
-const API_BASE_URL = "https://forecast24-backend.onrender.com";
+import axios from "axios";
 
-export async function fetchForecast() {
-  const res = await fetch(`${API_BASE_URL}/forecast`);
-  if (!res.ok) {
-    throw new Error("Kunne ikke hente forecast");
-  }
-  return res.json();
+const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+
+export function fetchSpotPrices(area) {
+  return axios.get(`${API_BASE}/api/spotprices`, { params: { area } });
 }
 
-export async function fetchSpotPrices(area = "NO1") {
-  const res = await fetch(`${API_BASE_URL}/spotprices?area=${area}`);
-  if (!res.ok) {
-    throw new Error("Kunne ikke hente spotpriser");
-  }
-  return res.json(); // { area, data: [...] }
+export function fetchSpotPricesHistory(area, start, end) {
+  return axios.get(`${API_BASE}/api/spotprices/history`, {
+    params: { area, start, end, limit: 5000 },
+  });
+}
+
+export function fetchForecast() {
+  return axios.get(`${API_BASE}/api/forecast`);
 }
