@@ -21,4 +21,3 @@ export function fetchForecast() {
   return axios.get(`${API_BASE}/api/forecast`);
 }
 
-console.log("VITE_API_BASE =", import.meta.env.VITE_API_BASE);
