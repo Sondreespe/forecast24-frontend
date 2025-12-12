@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 export function fetchSpotPrices(area) {
   return axios.get(`${API_BASE}/api/spotprices`, { params: { area } });
@@ -15,3 +15,5 @@ export function fetchSpotPricesHistory(area, start, end) {
 export function fetchForecast() {
   return axios.get(`${API_BASE}/api/forecast`);
 }
+
+console.log("VITE_API_BASE =", import.meta.env.VITE_API_BASE);

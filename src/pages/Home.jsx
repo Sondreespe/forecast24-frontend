@@ -59,7 +59,7 @@ export default function Home() {
             <li>🧠 Bygget med moderne data science- og ML-teknikker</li>
           </ul>
 
-          {/* Hvis du vil vise spotpris-graf på forsiden igjen, fjern kommentarene under */}
+         
           {/*
           <section style={{ marginTop: "1.5rem" }}>
             <h3 style={{ margin: 0, fontSize: "0.95rem" }}>Dagens strømpris (NO1)</h3>
@@ -115,7 +115,7 @@ export default function Home() {
 
               {forecastError && (
                 <p className="api-status api-status--error">
-                  Klarte ikke å hente forecast-data: {forecastError}
+                  Klarte ikke å hente data: {forecastError}
                 </p>
               )}
             </div>
