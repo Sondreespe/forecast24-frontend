@@ -54,7 +54,7 @@ export default function Home() {
           </div>
 
           <ul className="bullet-list" id="features">
-            <li>⚡ Time-for-time prognose for de neste 24 timene</li>
+            <li> Time-for-time prognose for de neste 24 timene</li>
             <li> Kombinerer historiske priser og mønstre i dataene</li>
             <li> Bygget med moderne data science- og ML-teknikker</li>
           </ul>
