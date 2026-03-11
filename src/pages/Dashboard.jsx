@@ -33,33 +33,31 @@ const AREA_INFO = {
 
 function NorwayMap({ selectedArea, onSelectArea }) {
   const areas = {
-    NO1: "M 160 320 L 200 280 L 240 270 L 260 300 L 250 340 L 220 370 L 180 360 Z",
-    NO2: "M 120 370 L 160 320 L 180 360 L 220 370 L 200 410 L 160 430 L 120 410 Z",
-    NO5: "M 100 290 L 140 260 L 160 320 L 120 370 L 90 350 L 80 320 Z",
-    NO3: "M 140 200 L 200 180 L 240 200 L 240 270 L 200 280 L 160 320 L 100 290 L 110 240 Z",
-    NO4: "M 160 60 L 220 40 L 270 80 L 280 140 L 240 200 L 200 180 L 140 200 L 130 150 L 150 100 Z",
+    // NO4: Long thin northern strip
+    NO4: "M 155 10 L 175 8 L 195 20 L 210 45 L 215 75 L 210 105 L 205 130 L 195 155 L 185 175 L 175 185 L 160 190 L 148 185 L 140 175 L 138 160 L 142 140 L 145 115 L 143 90 L 140 65 L 142 40 L 148 20 Z",
+    // NO3: Middle section - Trondheim area
+    NO3: "M 138 160 L 148 185 L 160 190 L 175 185 L 185 175 L 195 155 L 195 210 L 185 235 L 170 255 L 155 265 L 140 268 L 125 262 L 112 248 L 105 230 L 108 210 L 118 195 L 128 178 Z",
+    // NO1: East Norway - Oslo area
+    NO1: "M 140 268 L 155 265 L 170 255 L 185 235 L 195 210 L 200 240 L 198 265 L 192 285 L 185 305 L 178 325 L 172 345 L 165 360 L 155 370 L 142 372 L 132 365 L 125 350 L 122 330 L 122 308 L 125 285 L 128 268 Z",
+    // NO5: West Norway - Bergen area
+    NO5: "M 105 230 L 112 248 L 125 262 L 128 268 L 122 285 L 112 295 L 100 298 L 88 292 L 80 278 L 80 258 L 86 242 L 96 233 Z",
+    // NO2: Southern Norway
+    NO2: "M 88 292 L 100 298 L 112 295 L 122 308 L 122 330 L 125 350 L 132 365 L 142 372 L 148 385 L 142 398 L 130 408 L 115 412 L 100 408 L 85 398 L 75 382 L 70 362 L 72 340 L 76 318 L 80 300 Z",
   };
 
   const labelPositions = {
-    NO1: { x: 205, y: 325 },
-    NO2: { x: 163, y: 393 },
-    NO5: { x: 115, y: 335 },
-    NO3: { x: 180, y: 240 },
-    NO4: { x: 205, y: 135 },
+    NO4: { x: 178, y: 100 },
+    NO3: { x: 155, y: 225 },
+    NO1: { x: 165, y: 318 },
+    NO5: { x: 94, y: 268 },
+    NO2: { x: 108, y: 360 },
   };
 
   return (
-    <svg viewBox="0 0 360 460" className="norway-map">
+    <svg viewBox="0 60 260 380" className="norway-map">
       <defs>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
         <filter id="selected-glow">
-          <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+          <feGaussianBlur stdDeviation="4" result="coloredBlur" />
           <feMerge>
             <feMergeNode in="coloredBlur" />
             <feMergeNode in="SourceGraphic" />
@@ -75,9 +73,9 @@ function NorwayMap({ selectedArea, onSelectArea }) {
             <path
               d={path}
               fill={isSelected ? info.color : "#1e293b"}
-              stroke={isSelected ? info.color : "#334155"}
+              stroke={isSelected ? info.color : "#475569"}
               strokeWidth={isSelected ? 2 : 1}
-              opacity={isSelected ? 1 : 0.85}
+              opacity={isSelected ? 1 : 0.8}
               filter={isSelected ? "url(#selected-glow)" : "none"}
               className="map-path"
             />
@@ -86,7 +84,7 @@ function NorwayMap({ selectedArea, onSelectArea }) {
               y={labelPositions[area].y}
               textAnchor="middle"
               fill={isSelected ? "#fff" : "#94a3b8"}
-              fontSize="11"
+              fontSize="10"
               fontWeight={isSelected ? "700" : "500"}
               fontFamily="monospace"
               className="map-label"
@@ -96,9 +94,6 @@ function NorwayMap({ selectedArea, onSelectArea }) {
           </g>
         );
       })}
-
-      <rect x="230" y="20" width="40" height="20" rx="3" className="map-svalbard-rect" />
-      <text x="250" y="34" textAnchor="middle" className="map-svalbard-text" fontSize="8" fontFamily="monospace">SVB</text>
     </svg>
   );
 }
@@ -306,9 +301,9 @@ export default function Dashboard() {
                 <p className="muted">{loading ? "Laster KPI…" : "Ingen KPI-data."}</p>
               ) : (
                 <div className="kpi-table" role="table" aria-label="KPI">
-                  <div className="kpi-th" role="columnheader"> Dyreste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader"> Billigste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader"> Snittpris</div>
+                  <div className="kpi-th" role="columnheader">🔥 Dyreste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader">⚡ Billigste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader">📊 Snittpris</div>
                   <div className="kpi-td kpi-td--expensive" role="cell">
                     <div className="kpi-big">{kpi.priciest?.time ?? "–"}</div>
                     <div className="kpi-small">{kpi.priciest?.price ?? "–"} kr/kWh</div>
