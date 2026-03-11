@@ -33,28 +33,23 @@ const AREA_INFO = {
 
 function NorwayMap({ selectedArea, onSelectArea }) {
   const areas = {
-    // NO4: Long thin northern strip
-    NO4: "M 155 10 L 175 8 L 195 20 L 210 45 L 215 75 L 210 105 L 205 130 L 195 155 L 185 175 L 175 185 L 160 190 L 148 185 L 140 175 L 138 160 L 142 140 L 145 115 L 143 90 L 140 65 L 142 40 L 148 20 Z",
-    // NO3: Middle section - Trondheim area
-    NO3: "M 138 160 L 148 185 L 160 190 L 175 185 L 185 175 L 195 155 L 195 210 L 185 235 L 170 255 L 155 265 L 140 268 L 125 262 L 112 248 L 105 230 L 108 210 L 118 195 L 128 178 Z",
-    // NO1: East Norway - Oslo area
-    NO1: "M 140 268 L 155 265 L 170 255 L 185 235 L 195 210 L 200 240 L 198 265 L 192 285 L 185 305 L 178 325 L 172 345 L 165 360 L 155 370 L 142 372 L 132 365 L 125 350 L 122 330 L 122 308 L 125 285 L 128 268 Z",
-    // NO5: West Norway - Bergen area
-    NO5: "M 105 230 L 112 248 L 125 262 L 128 268 L 122 285 L 112 295 L 100 298 L 88 292 L 80 278 L 80 258 L 86 242 L 96 233 Z",
-    // NO2: Southern Norway
-    NO2: "M 88 292 L 100 298 L 112 295 L 122 308 L 122 330 L 125 350 L 132 365 L 142 372 L 148 385 L 142 398 L 130 408 L 115 412 L 100 408 L 85 398 L 75 382 L 70 362 L 72 340 L 76 318 L 80 300 Z",
+    NO4: "M 258.5 14.5 L 234.0 6.0 L 219.5 19.5 L 218.0 7.5 L 171.0 36.5 L 154.0 62.5 L 149.5 55.0 L 129.5 81.5 L 154.0 75.5 L 114.0 145.0 L 131.0 154.0 L 170.0 68.0 L 183.5 70.0 L 190.5 50.0 L 223.0 59.0 L 235.0 28.0 L 255.0 40.5 Z",
+    NO3: "M 132.0 160.0 L 104.5 145.0 L 108.0 150.5 L 89.5 171.0 L 42.5 202.5 L 38.5 222.5 L 53.0 221.0 L 65.5 209.0 L 79.0 216.5 L 99.0 195.5 L 114.5 202.5 L 115.5 175.5 L 132.0 166.5 Z",
+    NO1: "M 100.0 199.5 L 75.5 226.5 L 88.0 236.5 L 88.0 244.5 L 81.5 248.5 L 84.0 258.0 L 91.0 255.5 L 98.5 267.5 L 112.0 273.5 L 113.0 260.0 L 121.5 249.0 L 118.5 230.5 L 123.5 222.0 L 115.5 207.5 Z",
+    NO5: "M 83.5 240.0 L 79.5 232.5 L 70.5 229.0 L 72.0 216.5 L 69.0 213.5 L 64.5 214.5 L 57.0 224.5 L 40.0 226.5 L 37.5 229.0 L 37.5 239.5 L 40.5 243.5 L 63.0 239.5 L 72.0 244.0 L 80.0 244.0 Z",
+    NO2: "M 39.0 248.0 L 37.0 270.5 L 48.0 278.0 L 57.0 292.5 L 65.0 293.5 L 75.5 289.5 L 93.0 271.0 L 91.5 262.5 L 83.5 265.5 L 74.5 248.5 L 62.0 244.0 Z",
   };
 
   const labelPositions = {
-    NO4: { x: 178, y: 100 },
-    NO3: { x: 155, y: 225 },
-    NO1: { x: 165, y: 318 },
-    NO5: { x: 94, y: 268 },
-    NO2: { x: 108, y: 360 },
+    NO4: { x: 190, y: 90 },
+    NO3: { x: 82, y: 192 },
+    NO1: { x: 100, y: 245 },
+    NO5: { x: 58, y: 233 },
+    NO2: { x: 62, y: 272 },
   };
 
   return (
-    <svg viewBox="0 60 260 380" className="norway-map">
+    <svg viewBox="30 0 240 300" className="norway-map">
       <defs>
         <filter id="selected-glow">
           <feGaussianBlur stdDeviation="4" result="coloredBlur" />
@@ -301,9 +296,9 @@ export default function Dashboard() {
                 <p className="muted">{loading ? "Laster KPI…" : "Ingen KPI-data."}</p>
               ) : (
                 <div className="kpi-table" role="table" aria-label="KPI">
-                  <div className="kpi-th" role="columnheader">🔥 Dyreste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader">⚡ Billigste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader">📊 Snittpris</div>
+                  <div className="kpi-th" role="columnheader"> Dyreste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader"> Billigste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader"> Snittpris</div>
                   <div className="kpi-td kpi-td--expensive" role="cell">
                     <div className="kpi-big">{kpi.priciest?.time ?? "–"}</div>
                     <div className="kpi-small">{kpi.priciest?.price ?? "–"} kr/kWh</div>
