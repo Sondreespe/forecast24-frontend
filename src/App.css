@@ -337,3 +337,201 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================
+   Dashboard split layout
+   ========================= */
+
+.dashboard-page {
+  max-width: 1400px;
+}
+
+.dashboard-main {
+  padding: 2rem 0 3rem;
+}
+
+.dashboard-intro {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-split {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* =========================
+   Map panel (left)
+   ========================= */
+
+.map-panel {
+  padding: 1.5rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.map-panel-heading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 1rem;
+}
+
+.norway-map {
+  width: 100%;
+  max-width: 320px;
+  filter: drop-shadow(0 4px 24px rgba(0, 0, 0, 0.4));
+}
+
+.map-area {
+  cursor: pointer;
+}
+
+.map-path {
+  transition: all 0.2s ease;
+}
+
+.map-label {
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.map-svalbard-rect {
+  fill: #1e293b;
+  stroke: #334155;
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.map-svalbard-text {
+  fill: #475569;
+}
+
+/* Area info box */
+.area-info-box {
+  margin-top: 1.25rem;
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  background: #0f172a;
+  border-left: 3px solid transparent;
+}
+
+.area-info-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.area-badge {
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.area-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.area-cities {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Area list */
+.area-list {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.area-list-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.375rem;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  color: inherit;
+}
+
+.area-list-btn.is-active {
+  background: #1e293b;
+}
+
+.area-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.area-code {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  font-family: monospace;
+  width: 32px;
+}
+
+.area-label {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.area-list-btn.is-active .area-label {
+  color: #e2e8f0;
+}
+
+/* =========================
+   Right panel
+   ========================= */
+
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.dashboard-right-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.area-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.area-subtitle {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0.15rem 0 0;
+}
+
+.chart-wrapper {
+  height: 320px;
+}
+
+.muted {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
