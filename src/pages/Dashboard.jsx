@@ -306,9 +306,9 @@ export default function Dashboard() {
                 <p className="muted">{loading ? "Laster KPI…" : "Ingen KPI-data."}</p>
               ) : (
                 <div className="kpi-table" role="table" aria-label="KPI">
-                  <div className="kpi-th" role="columnheader">🔥 Dyreste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader">⚡ Billigste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader">📊 Snittpris</div>
+                  <div className="kpi-th" role="columnheader"> Dyreste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader"> Billigste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader"> Snittpris</div>
                   <div className="kpi-td kpi-td--expensive" role="cell">
                     <div className="kpi-big">{kpi.priciest?.time ?? "–"}</div>
                     <div className="kpi-small">{kpi.priciest?.price ?? "–"} kr/kWh</div>
