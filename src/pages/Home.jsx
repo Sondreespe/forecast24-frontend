@@ -38,6 +38,10 @@ export default function Home() {
             forbrukere og bedrifter som vil planlegge strømforbruk smartere.
           </p>
 
+          <p className="subtitle">
+              Det kan ta litt (ca 2 min) tid før backend starter opp og er klar til å vise data.
+
+          </p>
           <div className="hero-actions">
             <a className="primary-btn" href="/dashboard">
               Åpne dashboard
