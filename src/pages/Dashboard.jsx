@@ -190,8 +190,8 @@ export default function Dashboard() {
     return (value) => [`${value} kr/kWh`, mode === "today" ? "Pris" : "Snitt"];
   }, [mode]);
 
-  const expensiveLabel = `🔥 Dyreste ${mode === "today" ? "tid" : "dag"}`;
-  const cheapLabel = `⚡ Billigste ${mode === "today" ? "tid" : "dag"}`;
+  const expensiveLabel = ` Dyreste ${mode === "today" ? "tid" : "dag"}`;
+  const cheapLabel = ` Billigste ${mode === "today" ? "tid" : "dag"}`;
 
   return (
     <div className="app">
@@ -278,7 +278,7 @@ export default function Dashboard() {
                 {cheapLabel}
               </div>
               <div className="kpi-th" role="columnheader">
-                📊 Snittpris
+                 Snittpris
               </div>
 
               {/* Value row */}

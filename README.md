@@ -94,7 +94,7 @@ I produksjon settes denne til `https://forecast24-backend.onrender.com` via Verc
 
 ## Status
 
-> 🚧 **Under aktiv utvikling**
+>  **Under aktiv utvikling**
 >
 > Forecast-funksjonalitet og ML-basert prognose er planlagt som neste steg.
 
