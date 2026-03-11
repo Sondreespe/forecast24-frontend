@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchForecast } from "../api";
 import { SpotPriceChart } from "../components/SpotPriceChart";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
   const [forecastInfo, setForecastInfo] = useState(null);
@@ -14,16 +15,8 @@ export default function Home() {
 
   return (
     <div className="app">
-      <header className="header">
-        <div className="logo">Forecast24</div>
-        <nav className="nav">
-          <a href="#about">Om</a>
-          <a href="#features">Funksjoner</a>
-          <a href="/dashboard" className="nav-pill">
-            Dashboard
-          </a>
-        </nav>
-      </header>
+
+            <Navbar />
 
       <main className="hero">
         <section className="hero-content">
@@ -133,5 +126,6 @@ export default function Home() {
         <span>Built by Sondre Espe</span>
       </footer>
     </div>
+
   );
 }

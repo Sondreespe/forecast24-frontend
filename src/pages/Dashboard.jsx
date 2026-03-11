@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { fetchSpotPrices, fetchSpotPricesHistory } from "../api";
 import {
@@ -204,14 +205,7 @@ export default function Dashboard() {
 
   return (
     <div className="app dashboard-page">
-      <header className="header">
-        <div className="logo">Forecast24</div>
-        <nav className="nav">
-          <Link to="/" className="nav-pill">Hjem</Link>
-          <Link to="/dashboard">Dashboard</Link>
-        </nav>
-      </header>
-
+      <Navbar />
       <main className="dashboard-main">
         <div className="dashboard-intro">
           <h1 className="dashboard-title">Dashboard</h1>
