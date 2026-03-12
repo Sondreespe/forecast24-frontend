@@ -23,3 +23,7 @@ export function fetchForecast() {
   return axios.get(`${API_BASE}/api/forecast`);
 }
 
+export function fetchBaselineForecast(area = "NO1") {
+  return axios.get(`${API_BASE}/api/forecast/baseline`, { params: { area } });
+}
+

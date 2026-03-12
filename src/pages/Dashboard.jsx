@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
-import { fetchSpotPrices, fetchSpotPricesHistory } from "../api";
+import { Link, useSearchParams } from "react-router-dom";
+import { fetchSpotPrices, fetchSpotPricesHistory, fetchBaselineForecast } from "../api";
 import {
   LineChart,
   Line,
@@ -94,12 +94,28 @@ function NorwayMap({ selectedArea, onSelectArea }) {
   );
 }
 
+const FORECAST_MODELS = [
+  { id: "baseline", name: "Baseline", available: true },
+  { id: "xgboost", name: "XGBoost", available: false },
+  { id: "prophet", name: "Prophet", available: false },
+  { id: "lstm", name: "LSTM", available: false },
+];
+
 export default function Dashboard() {
+  const [searchParams] = useSearchParams();
+  const modelParam = searchParams.get("model");
+  const validModel = FORECAST_MODELS.find((m) => m.id === modelParam && m.available);
+  const initialMode = validModel ? "forecast" : "today";
+  const initialModel = validModel ? validModel.id : "baseline";
+
   const [area, setArea] = useState("NO1");
-  const [mode, setMode] = useState("today");
+  const [mode, setMode] = useState(initialMode);
+  const [selectedModel, setSelectedModel] = useState(initialModel);
 
   const [dataToday, setDataToday] = useState([]);
   const [dataHistory, setDataHistory] = useState([]);
+  const [dataForecast, setDataForecast] = useState([]);
+  const [forecastSummary, setForecastSummary] = useState(null);
   const [kpi, setKpi] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -194,14 +210,63 @@ export default function Dashboard() {
     return () => { cancelled = true; };
   }, [area, mode]);
 
-  const chartData = mode === "today" ? dataToday : dataHistory;
-  const xKey = mode === "today" ? "time" : "date";
-  const yKey = mode === "today" ? "price" : "avg";
+  useEffect(() => {
+    if (mode !== "forecast") return;
+    let cancelled = false;
+
+    async function loadForecast() {
+      setLoading(true);
+      setDataForecast([]);
+      setKpi(null);
+      try {
+        let res;
+        if (selectedModel === "baseline") {
+          res = await fetchBaselineForecast(area);
+        } else {
+          return;
+        }
+
+        const payload = res.data;
+        if (cancelled) return;
+
+        const points = (payload.points || [])
+          .filter((p) => p.price_nok_per_kwh !== null)
+          .map((p) => ({
+            time: String(p.hour).padStart(2, "0") + ":00",
+            price: p.price_nok_per_kwh,
+          }));
+
+        setDataForecast(points);
+        setForecastSummary(payload.summary || null);
+
+        const s = payload.summary;
+        if (s) {
+          setKpi({
+            cheapest: { time: String(s.cheapest_hour).padStart(2, "0") + ":00", price: s.min_price },
+            priciest: { time: String(s.priciest_hour).padStart(2, "0") + ":00", price: s.max_price },
+            avg: s.avg_price?.toFixed(3) ?? "–",
+          });
+        }
+      } catch {
+        if (!cancelled) { setDataForecast([]); setKpi(null); }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadForecast();
+    return () => { cancelled = true; };
+  }, [area, mode, selectedModel]);
+
+  const chartData = mode === "today" ? dataToday : mode === "history" ? dataHistory : dataForecast;
+  const xKey = mode === "history" ? "date" : "time";
+  const yKey = mode === "history" ? "avg" : "price";
   const areaInfo = AREA_INFO[area];
 
+  const modelName = FORECAST_MODELS.find((m) => m.id === selectedModel)?.name ?? "Prediksjon";
   const tooltipFormatter = useMemo(() => {
-    return (value) => [`${value} kr/kWh`, mode === "today" ? "Pris" : "Snitt"];
-  }, [mode]);
+    return (value) => [`${value} kr/kWh`, mode === "forecast" ? modelName : mode === "today" ? "Pris" : "Snitt"];
+  }, [mode, modelName]);
 
   return (
     <div className="app dashboard-page">
@@ -270,6 +335,23 @@ export default function Dashboard() {
                 >
                   Siste 30 dager
                 </button>
+                <div className={`toggle-select-wrap ${mode === "forecast" ? "is-active" : ""}`}>
+                  <select
+                    className="toggle-select"
+                    value={mode === "forecast" ? selectedModel : ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val) { setSelectedModel(val); setMode("forecast"); }
+                    }}
+                  >
+                    <option value="" disabled>Prediksjon</option>
+                    {FORECAST_MODELS.map((m) => (
+                      <option key={m.id} value={m.id} disabled={!m.available}>
+                        {m.name}{!m.available ? " (kommer)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -278,7 +360,11 @@ export default function Dashboard() {
                 <div>
                   <h2 className="kpi-title">Nøkkelinnsikt</h2>
                   <p className="kpi-sub">
-                    {mode === "today" ? "Basert på dagens timespriser." : "Basert på daglig snitt (30 dager)."}
+                    {mode === "today"
+                      ? "Basert på dagens timespriser."
+                      : mode === "history"
+                      ? "Basert på daglig snitt (30 dager)."
+                      : `${FORECAST_MODELS.find(m => m.id === selectedModel)?.name ?? "Prediksjon"} · 7-dagers rullende snitt.`}
                   </p>
                 </div>
                 <span className={`pill ${loading ? "pill--muted" : "pill--ok"}`}>
@@ -290,8 +376,8 @@ export default function Dashboard() {
                 <p className="muted">{loading ? "Laster KPI…" : "Ingen KPI-data."}</p>
               ) : (
                 <div className="kpi-table" role="table" aria-label="KPI">
-                  <div className="kpi-th" role="columnheader"> Dyreste {mode === "today" ? "tid" : "dag"}</div>
-                  <div className="kpi-th" role="columnheader"> Billigste {mode === "today" ? "tid" : "dag"}</div>
+                  <div className="kpi-th" role="columnheader"> Dyreste {mode === "history" ? "dag" : "tid"}</div>
+                  <div className="kpi-th" role="columnheader"> Billigste {mode === "history" ? "dag" : "tid"}</div>
                   <div className="kpi-th" role="columnheader"> Snittpris</div>
                   <div className="kpi-td kpi-td--expensive" role="cell">
                     <div className="kpi-big">{kpi.priciest?.time ?? "–"}</div>
@@ -313,12 +399,18 @@ export default function Dashboard() {
               <div className="card-header">
                 <div>
                   <h2 className="card-title">
-                    {mode === "today" ? "Dagens spotpris" : "Siste 30 dager (daglig snitt)"}
+                    {mode === "today"
+                      ? "Dagens spotpris"
+                      : mode === "history"
+                      ? "Siste 30 dager (daglig snitt)"
+                      : `${FORECAST_MODELS.find(m => m.id === selectedModel)?.name ?? "Prediksjon"} — i morgen`}
                   </h2>
                   <p className="card-subtitle">
                     {mode === "today"
                       ? `Område ${area} · Data fra NVE / hvakosterstrommen.no`
-                      : `Område ${area} · Daglig snitt (NOK/kWh)`}
+                      : mode === "history"
+                      ? `Område ${area} · Daglig snitt (NOK/kWh)`
+                      : `Område ${area} · 7-dagers rullende snitt (NOK/kWh)`}
                   </p>
                 </div>
               </div>

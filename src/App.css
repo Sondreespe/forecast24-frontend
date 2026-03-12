@@ -94,6 +94,60 @@
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
 }
 
+.toggle-select-wrap {
+  position: relative;
+  border-radius: 999px;
+  transition: background 150ms ease;
+}
+
+.toggle-select-wrap::after {
+  content: "▾";
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  font-size: 0.7rem;
+}
+
+.toggle-select-wrap.is-active {
+  background: rgba(94, 234, 212, 0.16);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-select-wrap.is-active::after {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.toggle-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 0.5rem 1.9rem 0.5rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: inherit;
+  font-family: inherit;
+  transition: color 150ms ease;
+}
+
+.toggle-select-wrap.is-active .toggle-select {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.toggle-select option {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+.toggle-select option:disabled {
+  color: #64748b;
+}
+
 /* =========================
    Shared cards
    ========================= */
