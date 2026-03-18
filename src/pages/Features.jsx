@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { fetchModelEvaluation } from "../api";
+import {
+  LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
+} from "recharts";
 
 const MODELS = [
   {
@@ -93,8 +97,30 @@ function ComplexityBar({ level }) {
 
 export default function Features() {
   const [selected, setSelected] = useState(MODELS[0]);
+  const [evalView, setEvalView] = useState(false);
+  const [evalData, setEvalData] = useState(null);
+  const [evalLoading, setEvalLoading] = useState(false);
   const navigate = useNavigate();
   const statusStyle = STATUS_STYLE[selected.status];
+
+  useEffect(() => {
+    setEvalView(false);
+    setEvalData(null);
+  }, [selected]);
+
+  async function loadEval() {
+    setEvalView(true);
+    setEvalLoading(true);
+    setEvalData(null);
+    try {
+      const res = await fetchModelEvaluation(selected.id, "NO1");
+      setEvalData(res.data);
+    } catch {
+      setEvalData({ status: "error", message: "Kunne ikke laste evalueringsdata." });
+    } finally {
+      setEvalLoading(false);
+    }
+  }
 
   return (
     <div className="app">
@@ -192,12 +218,20 @@ export default function Features() {
 
             <div className="model-detail-actions">
               {selected.status === "klar" ? (
-                <button
-                  className="primary-btn"
-                  onClick={() => navigate(`/dashboard?model=${selected.id}`)}
-                >
-                  Se prediksjon i dashboard
-                </button>
+                <>
+                  <button
+                    className="primary-btn"
+                    onClick={() => navigate(`/dashboard?model=${selected.id}`)}
+                  >
+                    Se prediksjon i dashboard
+                  </button>
+                  <button
+                    className="secondary-btn"
+                    onClick={loadEval}
+                  >
+                    Se prestasjon i dag
+                  </button>
+                </>
               ) : (
                 <button className="secondary-btn" disabled style={{ opacity: 0.5, cursor: "not-allowed" }}>
                   Ikke tilgjengelig ennå
@@ -206,6 +240,79 @@ export default function Features() {
             </div>
           </div>
         </div>
+
+        {evalView && (
+          <div className="eval-panel card" style={{ marginTop: "2rem" }}>
+            <div className="eval-header">
+              <div>
+                <h2 className="card-title">{selected.name} — Prestasjon i dag</h2>
+                <p className="card-subtitle">NO1 · Prediksjon vs faktisk pris (NOK/kWh)</p>
+              </div>
+              <button className="secondary-btn" onClick={() => setEvalView(false)}>
+                Lukk
+              </button>
+            </div>
+
+            {evalLoading && <div className="skeleton" style={{ height: 280, marginTop: "1rem" }} />}
+
+            {!evalLoading && evalData && evalData.status === "incomplete" && (
+              <p className="muted" style={{ marginTop: "1rem" }}>
+                {evalData.message}
+              </p>
+            )}
+
+            {!evalLoading && evalData && evalData.status === "error" && (
+              <p className="muted" style={{ marginTop: "1rem" }}>
+                Feil: {evalData.detail || evalData.message}
+              </p>
+            )}
+
+            {!evalLoading && evalData && evalData.status === "ok" && (
+              <>
+                <div className="eval-metrics">
+                  <div className="eval-metric-card">
+                    <span className="eval-metric-label">MAE</span>
+                    <span className="eval-metric-value">{evalData.metrics.mae}</span>
+                    <span className="eval-metric-unit">kr/kWh · snitt absolutt feil</span>
+                  </div>
+                  <div className="eval-metric-card">
+                    <span className="eval-metric-label">RMSE</span>
+                    <span className="eval-metric-value">{evalData.metrics.rmse}</span>
+                    <span className="eval-metric-unit">kr/kWh · straffer store avvik</span>
+                  </div>
+                  <div className="eval-metric-card">
+                    <span className="eval-metric-label">MAPE</span>
+                    <span className="eval-metric-value">{evalData.metrics.mape}%</span>
+                    <span className="eval-metric-unit">prosentvis feil</span>
+                  </div>
+                  <div className="eval-metric-card eval-metric-card--best">
+                    <span className="eval-metric-label">Beste time</span>
+                    <span className="eval-metric-value">{String(evalData.best_hour).padStart(2,"0")}:00</span>
+                    <span className="eval-metric-unit">minst avvik</span>
+                  </div>
+                  <div className="eval-metric-card eval-metric-card--worst">
+                    <span className="eval-metric-label">Verste time</span>
+                    <span className="eval-metric-value">{String(evalData.worst_hour).padStart(2,"0")}:00</span>
+                    <span className="eval-metric-unit">størst avvik</span>
+                  </div>
+                </div>
+
+                <div className="chart-wrapper" style={{ marginTop: "1.5rem" }}>
+                  <ResponsiveContainer width="100%" height={280}>
+                    <LineChart data={evalData.points.filter(p => p.actual != null || p.predicted != null)}>
+                      <XAxis dataKey="time" />
+                      <YAxis domain={["auto", "auto"]} />
+                      <Tooltip formatter={(v) => v != null ? `${v} kr/kWh` : "–"} />
+                      <Legend />
+                      <Line type="monotone" dataKey="actual" name="Faktisk" stroke="#10b981" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="predicted" name={selected.name} stroke="#3b82f6" strokeWidth={2} dot={false} strokeDasharray="5 3" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </main>
 
       <footer className="footer">

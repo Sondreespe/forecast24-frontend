@@ -31,3 +31,7 @@ export function fetchXGBoostForecast(area = "NO1") {
   return axios.get(`${API_BASE}/api/forecast/xgboost`, { params: { area } });
 }
 
+export function fetchModelEvaluation(modelId, area = "NO1") {
+  return axios.get(`${API_BASE}/api/evaluate/${modelId}`, { params: { area } });
+}
+

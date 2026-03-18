@@ -853,4 +853,63 @@
 .model-detail-actions {
   padding-top: 0.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Eval panel */
+.eval-panel {
+  padding: 1.5rem;
+}
+
+.eval-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.eval-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.eval-metric-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.eval-metric-card--best {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.eval-metric-card--worst {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.eval-metric-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.eval-metric-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  font-family: monospace;
+}
+
+.eval-metric-unit {
+  font-size: 0.68rem;
+  color: #475569;
 }
