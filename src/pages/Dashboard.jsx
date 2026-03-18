@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link, useSearchParams } from "react-router-dom";
-import { fetchSpotPrices, fetchSpotPricesHistory, fetchBaselineForecast } from "../api";
+import { fetchSpotPrices, fetchSpotPricesHistory, fetchBaselineForecast, fetchXGBoostForecast } from "../api";
 import {
   LineChart,
   Line,
@@ -95,10 +95,10 @@ function NorwayMap({ selectedArea, onSelectArea }) {
 }
 
 const FORECAST_MODELS = [
-  { id: "baseline", name: "Baseline", available: true },
-  { id: "xgboost", name: "XGBoost", available: false },
-  { id: "prophet", name: "Prophet", available: false },
-  { id: "lstm", name: "LSTM", available: false },
+  { id: "baseline", name: "Baseline", available: true, description: "7-dagers rullende snitt." },
+  { id: "xgboost", name: "XGBoost", available: true, description: "Gradient boosting med lag-features." },
+  { id: "prophet", name: "Prophet", available: false, description: "Sesongbasert tidsseriemodell." },
+  { id: "lstm", name: "LSTM", available: false, description: "Rekurrent nevralt nettverk." },
 ];
 
 export default function Dashboard() {
@@ -116,6 +116,7 @@ export default function Dashboard() {
   const [dataHistory, setDataHistory] = useState([]);
   const [dataForecast, setDataForecast] = useState([]);
   const [forecastSummary, setForecastSummary] = useState(null);
+  const [forecastError, setForecastError] = useState(null);
   const [kpi, setKpi] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -218,16 +219,24 @@ export default function Dashboard() {
       setLoading(true);
       setDataForecast([]);
       setKpi(null);
+      setForecastError(null);
       try {
         let res;
         if (selectedModel === "baseline") {
           res = await fetchBaselineForecast(area);
+        } else if (selectedModel === "xgboost") {
+          res = await fetchXGBoostForecast(area);
         } else {
           return;
         }
 
         const payload = res.data;
         if (cancelled) return;
+
+        if (payload.status === "error") {
+          setForecastError(payload.detail || "Ukjent feil fra modellen.");
+          return;
+        }
 
         const points = (payload.points || [])
           .filter((p) => p.price_nok_per_kwh !== null)
@@ -247,8 +256,12 @@ export default function Dashboard() {
             avg: s.avg_price?.toFixed(3) ?? "–",
           });
         }
-      } catch {
-        if (!cancelled) { setDataForecast([]); setKpi(null); }
+      } catch (err) {
+        if (!cancelled) {
+          setDataForecast([]);
+          setKpi(null);
+          setForecastError(err?.response?.data?.detail || err?.message || "Nettverksfeil.");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -364,7 +377,7 @@ export default function Dashboard() {
                       ? "Basert på dagens timespriser."
                       : mode === "history"
                       ? "Basert på daglig snitt (30 dager)."
-                      : `${FORECAST_MODELS.find(m => m.id === selectedModel)?.name ?? "Prediksjon"} · 7-dagers rullende snitt.`}
+                      : `${FORECAST_MODELS.find(m => m.id === selectedModel)?.name ?? "Prediksjon"} · ${FORECAST_MODELS.find(m => m.id === selectedModel)?.description ?? ""}`}
                   </p>
                 </div>
                 <span className={`pill ${loading ? "pill--muted" : "pill--ok"}`}>
@@ -410,13 +423,15 @@ export default function Dashboard() {
                       ? `Område ${area} · Data fra NVE / hvakosterstrommen.no`
                       : mode === "history"
                       ? `Område ${area} · Daglig snitt (NOK/kWh)`
-                      : `Område ${area} · 7-dagers rullende snitt (NOK/kWh)`}
+                      : `Område ${area} · ${FORECAST_MODELS.find(m => m.id === selectedModel)?.description ?? ""} (NOK/kWh)`}
                   </p>
                 </div>
               </div>
 
               {loading ? (
                 <div className="skeleton" style={{ height: 320 }} />
+              ) : forecastError && mode === "forecast" ? (
+                <p className="muted">Feil: {forecastError}</p>
               ) : chartData.length === 0 ? (
                 <p className="muted">Kunne ikke laste data for {area}.</p>
               ) : (

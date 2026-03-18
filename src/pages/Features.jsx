@@ -26,7 +26,7 @@ const MODELS = [
     description:
       "Bruker gradient boosting med engineered features som time på dagen, ukedag og laggede priser. Fanger ikke-lineære mønstre som baseline ikke klarer.",
     tech: ["XGBoost", "Scikit-learn", "Pandas"],
-    status: "under utvikling",
+    status: "klar",
     complexity: 3,
     details: [
       { label: "Metode", value: "Gradient Boosted Trees" },
