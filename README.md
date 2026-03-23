@@ -1,79 +1,78 @@
 # forecast24-frontend
 
-Frontend for [Forecast24](https://forecast24.no) – et sideprosjekt for prediksjon av norske strømpriser.
-
-Bygget med **React** og **Vite**, hostet på [Vercel](https://vercel.com).
+Frontend for [Forecast24](https://forecast24.no) – a side project for predicting Norwegian electricity prices.
+Built with **React** and **Vite**, hosted on [Vercel](https://vercel.com).
 
 ---
 
 ## Tech Stack
 
-| Lag | Teknologi |
-|---|---|
-| Rammeverk | React 18 |
-| Byggverktøy | Vite |
-| Routing | React Router |
-| Graf | Recharts |
-| HTTP | Axios |
-| Hosting | Vercel |
+| Layer      | Technology   |
+|------------|--------------|
+| Framework  | React 18     |
+| Build Tool | Vite         |
+| Routing    | React Router |
+| Charts     | Recharts     |
+| HTTP       | Axios        |
+| Hosting    | Vercel       |
 
 ---
 
-## Sider
+## Pages
 
-### `/` – Hjemmeside
-Landingsside med informasjon om prosjektet, funksjoner og teknisk stack.
+### `/` – Home
+Landing page with information about the project, features, and tech stack.
 
 ### `/dashboard` – Dashboard
-Interaktivt dashboard med:
-- **Dagens spotpris** – time-for-time graf for valgt prisområde
-- **Siste 30 dager** – daglig snitt over en måneds historikk
-- **KPI-kort** – billigste time/dag, dyreste time/dag og snittpris
-- Støtte for alle norske prisområder: NO1–NO5
+Interactive dashboard with:
+- **Today's spot price** – hour-by-hour chart for the selected price zone
+- **Last 30 days** – daily average over one month of historical data
+- **KPI cards** – cheapest hour/day, most expensive hour/day, and average price
+- Support for all Norwegian price zones: NO1–NO5
 
 ---
 
-## Lokal kjøring
+## Running Locally
 
-### 1. Klon repoet
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Sondreespe/forecast24-frontend.git
 cd forecast24-frontend
 ```
 
-### 2. Installer avhengigheter
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-### 3. Konfigurer miljøvariabler
-Opprett en `.env`-fil i rotmappen:
+### 3. Configure environment variables
+Create a `.env` file in the root directory:
 ```
 VITE_API_BASE=http://localhost:8000
 ```
 
-### 4. Start utviklingsserveren
+### 4. Start the development server
 ```bash
 npm run dev
 ```
 
-Appen er nå tilgjengelig på `http://localhost:5173`.
+The app is now available at `http://localhost:5173`.
 
 ---
 
-## Prosjektstruktur
+## Project Structure
 
 ```
 forecast24-frontend/
 ├── src/
 │   ├── App.jsx                      # Routing
-│   ├── main.jsx                     # Inngangspunkt
-│   ├── api.js                       # API-kall mot backend
+│   ├── main.jsx                     # Entry point
+│   ├── api.js                       # API calls to backend
 │   ├── pages/
-│   │   ├── Home.jsx                 # Landingsside
-│   │   └── Dashboard.jsx            # Hoveddashboard
+│   │   ├── Home.jsx                 # Landing page
+│   │   └── Dashboard.jsx            # Main dashboard
 │   └── components/
-│       └── SpotPriceChart.jsx       # Gjenbrukbar prisgraf
+│       └── SpotPriceChart.jsx       # Reusable price chart
 ├── index.html
 ├── vite.config.js
 ├── vercel.json
@@ -82,25 +81,25 @@ forecast24-frontend/
 
 ---
 
-## Miljøvariabler
+## Environment Variables
 
-| Variabel | Beskrivelse |
-|---|---|
-| `VITE_API_BASE` | URL til backend-APIet |
+| Variable        | Description           |
+|-----------------|-----------------------|
+| `VITE_API_BASE` | URL to the backend API |
 
-I produksjon settes denne til `https://forecast24-backend.onrender.com` via Vercel-innstillingene.
+In production, this is set to `https://forecast24-backend.onrender.com` via Vercel settings.
 
 ---
 
 ## Status
 
->  **Under aktiv utvikling**
+> **Under active development**
 >
-> Forecast-funksjonalitet og ML-basert prognose er planlagt som neste steg.
+> Forecast functionality and ML-based predictions are planned as the next step.
 
 ---
 
-## Relatert
+## Related
 
 - **Backend:** [forecast24-backend](https://github.com/Sondreespe/forecast24-backend)
 - **Live app:** [forecast24.no](https://forecast24.no)
